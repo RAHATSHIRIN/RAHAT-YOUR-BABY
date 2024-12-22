@@ -5,18 +5,20 @@ const baseApiUrl = async () => {
   const base = await axios.get(`https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`);
   return base.data.api;
 };
-
-const config = {
+module.exports.config = {
   name: "autolink",
-  version: "2.0",
-  author: "RAHAT",
+  version: "1.0.",
+  hasPermssion: 0,
   credits: "RAHAT",
-  description: "Auto download video from tiktok, facebook, Instagram, YouTube, and more",
-  category: "media",
-  commandCategory: "media",
+  description: "Fb Vid Downloader",
+  commandCategory: "other",
+  category: "others",
+  usags: "fb video link",
   usePrefix: true,
   prefix: true,
+  cooldowns: 2,
   dependencies: {
+
     "tinyurl": "",
     "fs-extra": "",
   },

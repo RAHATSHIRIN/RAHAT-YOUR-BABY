@@ -1,83 +1,39 @@
-const fs = require("fs-extra");
-const axios = require("axios");
-module.exports.config = {
+module.exports = {
+  config:{
     name: "auto",
-    version: "1.0.0",
+    version: "0.0.2",
     hasPermission: 0,
-    credits: "RAHAT",
-    description: "ALL Video Download",
     usePrefix: true,
-    commandCategory: "Khan Rahul RK",
-    usages: "Facebook Tiktok Video Download LINK",
+    credits: "RAHAT",
+    description: "auto video download",
+    commandCategory: "user",
+    usages: "",
     cooldowns: 5,
-    dependencies: {
-    }
-  },
-  module.exports.run: async function ({ api, event }) {
-    const threadID = event.threadID;
+},
+start: async function({ nayan, events, args }) {},
+handleEvent: async function ({ api, event, args }) {
+    const axios = require("axios")
+    const request = require("request")
+    const fs = require("fs-extra")
+  const content = event.body ? event.body : '';
+  const body = content.toLowerCase();
+  const {alldown} = require("nayan-videos-downloader")
+  if (body.startsWith("https://")) {
+  api.setMessageReaction("🔍", event.messageID, (err) => {}, true);
+const data = await alldown(content);
+  console.log(data)
+  const {low, high, title} = data.data;
+    api.setMessageReaction("✔️", event.messageID, (err) => {}, true);
+  const video = (await axios.get(high, {
+      responseType: "arraybuffer",
+    })).data;
+    fs.writeFileSync(__dirname + "/cache/auto.mp4", Buffer.from(video, "utf-8"))
 
-    if (!this.threadStates[threadID]) {
-      this.threadStates[threadID] = {
-        autoTikEnabled: false,
-      };
-    }
+        return api.sendMessage({
+            body: `《TITLE》: ${title}`,
+            attachment: fs.createReadStream(__dirname + "/cache/auto.mp4")
 
-    if (event.body.toLowerCase().includes('autotik')) {
-
-      if (event.body.toLowerCase().includes('on')) {
-        this.threadStates[threadID].autoTikEnabled = true;
-        api.sendMessage("AutoTik is now ON.", event.threadID, event.messageID);
-      } else if (event.body.toLowerCase().includes('off')) {
-        this.threadStates[threadID].autoTikEnabled = false;
-        api.sendMessage("AutoTik is now OFF.", event.threadID, event.messageID);
-      } else {
-        api.sendMessage("type 'autotik on' to turn on and\n'autotik off' to turn off.", event.threadID, event.messageID);
-      }
+        }, event.threadID, event.messageID);
     }
-  },
-  onChat: async function ({ api, event }) {
-    const threadID = event.threadID;
-
-    if (this.threadStates[threadID] && this.threadStates[threadID].autoTikEnabled && this.checkLink(event.body)) {
-      var { url } = this.checkLink(event.body);
-      this.downLoad(url, api, event);
-      api.setMessageReaction("💐", event.messageID, (err) => {}, true);
-    }
-  },
-  downLoad: function (url, api, event) {
-    var time = Date.now();
-    var path = __dirname + `/cache/${time}.mp4`;
-    this.getLink(url).then(res => {
-      axios({
-        method: "GET",
-        url: res,
-        responseType: "arraybuffer"
-      }).then(res => {
-        fs.writeFileSync(path, Buffer.from(res.data, "utf-8"));
-        if (fs.statSync(path).size / 1024 / 1024 > 25) {
-          return api.sendMessage("The file is too large, cannot be sent", event.threadID, () => fs.unlinkSync(path), event.messageID);
-        }
-        api.sendMessage({
-          body: "Successful Download!",
-          attachment: fs.createReadStream(path)
-        }, event.threadID, () => fs.unlinkSync(path), event.messageID);
-      }).catch(err => console.error(err));
-    }).catch(err => console.error(err));
-  },
-  getLink: function (url) {
-    return new Promise((resolve, reject) => {
-      axios({
-        method: "GET",
-        url: `https://api.nayan-project.repl.co/tiktok/downloadvideo?url=${url}`
-      }).then(res => resolve(res.data.data.play)).catch(err => reject(err));
-    });
-  },
-  checkLink: function (url) {
-    if (url.includes("tiktok")) {
-      return {
-        url: url
-      };
-    }
-    return null;
-  }
-};
+}
+}

@@ -1,8 +1,8 @@
 const axios = require("axios");
+const fs = require("fs-extra");
+const tinyurl = require("tinyurl");
 const baseApiUrl = async () => {
-  const base = await axios.get(
-    `https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`,
-  );
+  const base = await axios.get(`https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`);
   return base.data.api;
 };
 

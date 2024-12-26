@@ -1,43 +1,22 @@
-const axios = require("axios");
-const baseApiUrl = async () => {
-  const base = await axios.get(
-    `https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`,
-  );
-  return base.data.api;
+module.exports.config = {
+    name: "imgur",
+    version: "1.0.0",
+    hasPermssion: 0,
+    credits: "RAHAT",
+    description: "Imgur Khan Rahul RK",
+    commandCategory: "Game",
+    usages: "[reply]",
+    cooldowns: 5,
+    dependencies: {
+      "axios": ""
+    }
 };
 
-(module.exports.config = {
-  name: "imgur",
-  version: "6.9",
-  credits: "RAHAT",
-  countDown: 5,
-  hasPermssion: 0,
-  usePrefix: true,
-  commandCategory: "media",
-  description: "convert image/video into Imgur link",
-  usages: "reply [image, video]",
-}),
-  (module.exports.run = async function ({ api, event }) {
-    const dip = event.messageReply?.attachments[0]?.url;
-    if (!dip) {
-      return api.sendMessage(
-        "Please reply to an image or video.",
-        event.threadID,
-        event.messageID,
-      );
-    }
-    try {
-      const res = await axios.get(
-        `${await baseApiUrl()}/imgur?url=${encodeURIComponent(dip)}`,
-      );
-      const dipto = res.data.data;
-      api.sendMessage(dipto, event.threadID, event.messageID);
-    } catch (error) {
-      console.error(error);
-      return api.sendMessage(
-        "Failed to convert image or video into link.",
-        event.threadID,
-        event.messageID,
-      );
-    }
-  });
+module.exports.run = async ({ api, event }) => {
+const axios = global.nodemodule['axios'];  
+var linkanh = event.messageReply.attachments[0].url || args.join(" ");
+    if(!linkanh) return api.sendMessage('Please reply or enter a link 1 image!!!', event.threadID, event.messageID)
+const res = await axios.get(`https://imgur-api-by-koja.xx0xkoja.repl.co/imgur?link=${encodeURIComponent(linkanh)}`);    
+var img = res.data.uploaded.image;
+    return api.sendMessage(`${img}`, event.threadID, event.messageID);
+}

@@ -1,22 +1,34 @@
+const axios = require('axios');
+
 module.exports.config = {
-    name: "imgur",
-    version: "1.0.0",
-    hasPermssion: 0,
+    name: "vimgur",
+    usePrefix: false,
+    version: "1.0",
     credits: "RAHAT",
-    description: "Imgur Khan Rahul RK",
-    commandCategory: "Game",
-    usages: "[reply]",
     cooldowns: 5,
-    dependencies: {
-      "axios": ""
+    hasPermission: 0,
+    description: "Upload image or video to Imgur by replying to photo or video",
+    commandCategory: "tools",
+    usages: "imgurl [image, video]"
+  },
+
+  module.exports.run = async function ({ api, event }) {
+    const link = event.messageReply?.attachments[0]?.url;
+    if (!link) {
+      return api.sendMessage('Please reply to an image or video.', event.threadID, event.messageID);
+    }
+
+    try {
+      const res = await axios.get(`https://rishadapi.rishad100.repl.co/imgur2?apikey=fuck&link=${encodeURIComponent(link)}`);
+      const uploaded = res.data.uploaded;
+
+      if (uploaded.status === "success") {
+        return api.sendMessage(uploaded.url, event.threadID, event.messageID);
+      } else {
+        return api.sendMessage('Failed to upload image or video to Imgur.', event.threadID, event.messageID);
+      }
+    } catch (error) {
+      console.error(error);
+      return api.sendMessage('Failed to upload image or video to Imgur.', event.threadID, event.messageID);
     }
 };
-
-module.exports.run = async ({ api, event }) => {
-const axios = global.nodemodule['axios'];  
-var linkanh = event.messageReply.attachments[0].url || args.join(" ");
-    if(!linkanh) return api.sendMessage('Please reply or enter a link 1 image!!!', event.threadID, event.messageID)
-const res = await axios.get(`https://imgur-api-by-koja.xx0xkoja.repl.co/imgur?link=${encodeURIComponent(linkanh)}`);    
-var img = res.data.uploaded.image;
-    return api.sendMessage(`${img}`, event.threadID, event.messageID);
-}

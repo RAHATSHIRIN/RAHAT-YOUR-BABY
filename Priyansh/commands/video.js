@@ -1,1 +1,112 @@
-module.exports.config={name:"video",version:"1.0.0",hasPermssion:0,credits:"RAHAT",description:"Phát video thông qua link YouTube hoặc từ khoá tìm kiếm",commandCategory:"media",usages:"[searchVideos]",cooldowns:10,dependencies:{"ytdl-core":"","simple-youtube-api":""}},module.exports.handleReply=async function({api:e,event:a,handleReply:t}){const n=global.nodemodule.axios,s=global.nodemodule["fs-extra"],i=(global.nodemodule.request,await n.get("https://raw.githubusercontent.com/quyenkaneki/data/main/video.json")),r=i.data.keyVideo.length,o=i.data.keyVideo[Math.floor(Math.random()*r)],{createReadStream:d,createWriteStream:m,unlinkSync:l,statSync:h}=global.nodemodule["fs-extra"];var c,u=a.body;if(c=u,isNaN(c)||(c<1||c>6))return e.sendMessage("choose from 1 -> 6  baby.uwu ❤️",a.threadID,a.messageID);e.unsendMessage(t.messageID);try{var g={method:"GET",url:"https://ytstream-download-youtube-videos.p.rapidapi.com/dl",params:{id:`${t.link[a.body-1]}`},headers:{"x-rapidapi-host":"ytstream-download-youtube-videos.p.rapidapi.com","x-rapidapi-key":`${o.API_KEY}`}};var p=(await n.request(g)).data,y=p.title;if("fail"==p.status)return e.sendMessage("Không thể gửi file này.",a.threadID);var f=Object.keys(p.link)[1],b=p.link[f][0];path1=__dirname+"/cache/1.mp4";const i=(await n.get(`${b}`,{responseType:"arraybuffer"})).data;return s.writeFileSync(path1,Buffer.from(i,"utf-8")),e.unsendMessage(t.messageID),s.statSync(__dirname+"/cache/1.mp4").size>26e6?e.sendMessage("Không thể gửi file vì dung lượng lớn hơn 25MB.",a.threadID,(()=>l(__dirname+"/cache/1.mp4")),a.messageID):e.sendMessage({body:`» ${y}`,attachment:s.createReadStream(__dirname+"/cache/1.mp4")},a.threadID,(()=>s.unlinkSync(__dirname+"/cache/1.mp4")),a.messageID)}catch{return e.sendMessage("Không thể gửi file này!",a.threadID,a.messageID)}for(let e=1;e<7;e++)l(__dirname+`/cache/${e}.png`)},module.exports.run=async function({api:e,event:a,args:t}){const n=global.nodemodule.axios,s=global.nodemodule["fs-extra"],i=(global.nodemodule.request,await n.get("https://raw.githubusercontent.com/quyenkaneki/data/main/video.json")),r=i.data.keyVideo.length,o=i.data.keyVideo[Math.floor(Math.random()*r)],d=(global.nodemodule["ytdl-core"],global.nodemodule["simple-youtube-api"]),{createReadStream:m,createWriteStream:l,unlinkSync:h,statSync:c}=global.nodemodule["fs-extra"];var u=["AIzaSyB5A3Lum6u5p2Ki2btkGdzvEqtZ8KNLeXo","AIzaSyAyjwkjc0w61LpOErHY_vFo6Di5LEyfLK0","AIzaSyBY5jfFyaTNtiTSBNCvmyJKpMIGlpCSB4w","AIzaSyCYCg9qpFmJJsEcr61ZLV5KsmgT1RE5aI4"];const g=u[Math.floor(Math.random()*u.length)],p=new d(g);if(0==t.length||!t)return e.sendMessage("» The search section can't be done. Blank! ",a.threadID,a.messageID);const y=t.join(" ");if(0==t.join(" ").indexOf("https://")){var f={method:"GET",url:"https://ytstream-download-youtube-videos.p.rapidapi.com/dl",params:{id:t.join(" ").split(/^.*(youtu.be\/|v\/|embed\/|watch\?|youtube.com\/user\/[^#]*#([^\/]*?\/)*)\??v?=?([^#\&\?]*).*/)[3]},headers:{"x-rapidapi-host":"ytstream-download-youtube-videos.p.rapidapi.com","x-rapidapi-key":`${o.API_KEY}`}};var b=(await n.request(f)).data,v=b.title;if("fail"==b.status)return e.sendMessage("Không thể gửi file này.",a.threadID);var k=Object.keys(b.link)[1],I=b.link[k][0];path1=__dirname+"/cache/1.mp4";const i=(await n.get(`${I}`,{responseType:"arraybuffer"})).data;return s.writeFileSync(path1,Buffer.from(i,"utf-8")),s.statSync(__dirname+"/cache/1.mp4").size>26e6?e.sendMessage("Không thể gửi file vì nó có dung lượng lớn hơn 25MB.",a.threadID,(()=>h(__dirname+"/cache/1.mp4")),a.messageID):e.sendMessage({body:`» ${v}`,attachment:s.createReadStream(__dirname+"/cache/1.mp4")},a.threadID,(()=>s.unlinkSync(__dirname+"/cache/1.mp4")),a.messageID)}try{const t=global.nodemodule["fs-extra"],n=global.nodemodule.axios;var w=[],_="",D=0,S=0,M=[],$=await p.searchVideos(y,6);for(let e of $){if(void 0===e.id)return;w.push(e.id);e.id;let a=__dirname+`/cache/${S+=1}.png`,s=`https://img.youtube.com/vi/${e.id}/hqdefault.jpg`,i=(await n.get(`${s}`,{responseType:"arraybuffer"})).data,r=(await n.get(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${e.id}&key=${g}`)).data.items[0].contentDetails.duration.slice(2).replace("S","").replace("M",":");(await n.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${e.id}&key=${g}`)).data.items[0].snippet.channelTitle;if(t.writeFileSync(a,Buffer.from(i,"utf-8")),M.push(t.createReadStream(__dirname+`/cache/${S}.png`)),1==(D=D+=1))var x="⓵";if(2==D)x="⓶";if(3==D)x="⓷";if(4==D)x="⓸";if(5==D)x="⓹";if(6==D)x="⓺";_+=`${x} 《${r}》 ${e.title}\n\n`}var j=`»🔎 There's ${w.length}list that coincides with your search keyword:\n\n\n${_}» Reply(reply in order number) select one of the searches above `;return e.sendMessage({attachment:M,body:j},a.threadID,((e,t)=>global.client.handleReply.push({name:this.config.name,messageID:t.messageID,author:a.senderID,link:w})),a.messageID)}catch(t){return e.sendMessage("Không thể xử lý request do đã phát sinh lỗi modul: "+t.message,a.threadID,a.messageID)}};
+const fetch = require("node-fetch");
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const ytSearch = require("yt-search");
+
+module.exports = {
+  config: {
+    name: "video",
+    version: "1.0.1",
+    hasPermssion: 0,
+    credits: "𝗞𝗛𝗔𝗡 𝗥𝗔𝗛𝗨𝗟 𝗥𝗞",
+    description: "Download YouTube song from keyword search and link",
+    commandCategory: "Media",
+    usages: "[songName] [type]",
+    cooldowns: 5,
+    dependencies: {
+      "node-fetch": "",
+      "yt-search": "",
+    },
+  },
+
+  run: async function ({ api, event, args }) {
+    let songName, type;
+
+    if (
+      args.length > 1 &&
+      (args[args.length - 1] === "audio" || args[args.length - 1] === "video")
+    ) {
+      type = args.pop();
+      songName = args.join(" ");
+    } else {
+      songName = args.join(" ");
+      type = "audio";
+    }
+
+    const processingMessage = await api.sendMessage(
+      "✅ Processing your request. Please wait... Api \n𝗞𝗛𝗔𝗡 𝗥𝗔𝗛𝗨𝗟 𝗥𝗞",
+      event.threadID,
+      null,
+      event.messageID
+    );
+
+    try {
+      // Search for the song on YouTube
+      const searchResults = await ytSearch(songName);
+      if (!searchResults || !searchResults.videos.length) {
+        throw new Error("No results found for your search query.");
+      }
+
+      // Get the top result from the search
+      const topResult = searchResults.videos[0];
+      const videoId = topResult.videoId;
+
+      // Construct API URL for downloading the top result
+      const apiKey = "priyansh-here";
+      const apiUrl = `https://priyansh-ai.onrender.com/youtube?id=${videoId}&type=video&apikey=${apiKey}`;
+
+      api.setMessageReaction("⌛", event.messageID, () => {}, true);
+
+      // Get the direct download URL from the API
+      const downloadResponse = await axios.get(apiUrl);
+      const downloadUrl = downloadResponse.data.downloadUrl;
+
+      // Set request headers
+      const headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://cnvmp3.com/',
+        'Cookie': '_ga=GA1.1.1062081074.1735238555; _ga_MF283RRQCW=GS1.1.1735238554.1.1.1735239728.0.0.0',
+      };
+
+      const response = await fetch(downloadUrl, { headers });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch song. Status code: ${response.status}`);
+      }
+
+      // Set the filename based on the song title and type
+      const filename = `${topResult.title}.${type === "audio" ? "mp3" : "mp4"}`;
+      const downloadPath = path.join(__dirname, filename);
+
+      const songBuffer = await response.buffer();
+
+      // Save the song file locally
+      fs.writeFileSync(downloadPath, songBuffer);
+
+      api.setMessageReaction("✅", event.messageID, () => {}, true);
+
+      await api.sendMessage(
+        {
+          attachment: fs.createReadStream(downloadPath),
+          body: `🖤 Title: ${topResult.title}\n\n Here is your ${type === "audio" ? "audio" : "video"} 🎧:`,
+        },
+        event.threadID,
+        () => {
+          fs.unlinkSync(downloadPath);
+          api.unsendMessage(processingMessage.messageID);
+        },
+        event.messageID
+      );
+    } catch (error) {
+      console.error(`Failed to download and send song: ${error.message}`);
+      api.sendMessage(
+        `Failed to download song: ${error.message}`,
+        event.threadID,
+        event.messageID
+      );
+    }
+  },
+};

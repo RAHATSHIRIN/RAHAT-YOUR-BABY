@@ -23,7 +23,7 @@ module.exports = {
     if (!prompt) return api.sendMessage("❌| Wrong Format. ✅ | Use: 17/18 years old boy/girl watching football match on TV with 'RAHAT' and '69' written on the back of their dress, 4k", event.threadID, event.messageID);
     try {
        //const cookies = "cookies here (_U value)";
-const cookies = ["1OYfOpODQaN5UW3rGrZAfCQuNL0dpPwMz4MN5AKiwDF_UCmOCVtZvo8ZnegqHxU82L772w_19dauj8ibasyWrE5CMPWwPlIHDKuq5U_GbXPaolPa2AIsEUJ20h1MXsybziePkyxmqA-_duZbUibKBbc7tKBG-qd7aNa7g_dj_JRpT-gyrW7Xexm8QKmJ9ltqtoHRLmIJYjx7mew6d7sCe0g"];
+const cookies = ["1iqW-jwlGhGqNQTlnNFpftEHFcVQU-Z9k8g1B4lz05ymaMdRLEx4JAObHgs0tBDoixBiJpuDBgb-N1LGCT8x5QU_xeEKS9c5C70huLqEwrIO0kSU8SF3jyfiOkPEG0300sn8F4Sun5CCLDLoyQskGyRzTATj0yvjFIwP1VfpIRGq29e61_OZtoGL5M7OZLqz7tqEgxVnrbEzPEkUUkx6HDQ"];
 const randomCookie = cookies[Math.floor(Math.random() * cookies.length)];
       const wait = api.sendMessage("𝙥𝙡𝙚𝙖𝙨𝙚 𝙬𝙞𝙩𝙝𝙚 𝙥𝙧𝙤𝙘𝙚𝙨𝙨𝙞𝙣𝙜 𝙮𝙤𝙪𝙧 𝙞𝙢𝙖𝙜𝙚 \n\n𝙠𝙝𝙖𝙣 𝙧𝙖𝙝𝙪𝙡 𝙧𝙠💞", event.threadID);
       const response = await axios.get(`${await baseApiUrl()}/dalle?prompt=${prompt}&key=dipto008&cookies=${randomCookie}`);
